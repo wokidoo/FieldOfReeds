@@ -1,0 +1,30 @@
+[gd_scene load_steps=5 format=3 uid="uid://bjmcdggeahrkj"]
+
+[ext_resource type="Script" path="res://procedural_plane.gd" id="1_ff1yh"]
+[ext_resource type="Shader" path="res://rock.gdshader" id="2_lrg6o"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_n7jsy"]
+seed = 100
+frequency = 0.0188
+fractal_type = 2
+fractal_octaves = 1
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_3xrdu"]
+render_priority = 0
+shader = ExtResource("2_lrg6o")
+shader_parameter/primary_colour = Color(0.366595, 0.366595, 0.366595, 1)
+shader_parameter/secondary_colour = Color(0.262513, 0.311456, 0.151713, 1)
+shader_parameter/weight = 0.81
+
+[node name="ProceduralPlane" type="Node3D"]
+script = ExtResource("1_ff1yh")
+auto_regenerate = true
+mesh_texture = SubResource("FastNoiseLite_n7jsy")
+size = Vector2(100, 100)
+material = SubResource("ShaderMaterial_3xrdu")
+height = 6.724
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.451267, 0.149281, -0.879814, -0.667924, -0.710329, 0.222062, -0.591808, 0.687857, 0.420256, 0, 0, 0)
+light_energy = 3.101
+sky_mode = 1
