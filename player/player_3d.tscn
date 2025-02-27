@@ -1,0 +1,50 @@
+[gd_scene load_steps=5 format=3 uid="uid://degwgv37j6gb0"]
+
+[ext_resource type="Script" path="res://player/player_3d.gd" id="1_fpcba"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_f0mnh"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_og10i"]
+top_radius = 0.0
+bottom_radius = 0.1
+height = 0.75
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_0a4fc"]
+
+[node name="Player" type="CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+script = ExtResource("1_fpcba")
+ROTATE_SPEED = 5.0
+CAM_OFFSET = Vector3(1, 1, 2)
+PITCH_LIMITS = Vector2(30, 90)
+
+[node name="body_mesh" type="MeshInstance3D" parent="."]
+mesh = SubResource("CapsuleMesh_f0mnh")
+skeleton = NodePath("../CollisionShape3D")
+
+[node name="forward_pointer" type="MeshInstance3D" parent="body_mesh"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, -1.22892)
+mesh = SubResource("CylinderMesh_og10i")
+skeleton = NodePath("../..")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_0a4fc")
+
+[node name="CameraArm" type="SpringArm3D" parent="."]
+unique_name_in_owner = true
+collision_mask = 0
+spring_length = 5.0
+
+[node name="CameraVerticalOffset" type="SpringArm3D" parent="CameraArm"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
+collision_mask = 0
+
+[node name="CameraHorizontalOffset" type="SpringArm3D" parent="CameraArm/CameraVerticalOffset"]
+unique_name_in_owner = true
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 0)
+collision_mask = 0
+
+[node name="Camera3D" type="Camera3D" parent="CameraArm/CameraVerticalOffset/CameraHorizontalOffset"]
+unique_name_in_owner = true
+transform = Transform3D(-4.37114e-08, -1, 4.37114e-08, 0, -4.37114e-08, -1, 1, -4.37114e-08, 1.91069e-15, 0, 0, 0)

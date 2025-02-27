@@ -1,0 +1,32 @@
+[gd_scene load_steps=5 format=3 uid="uid://frvextu0jlu3"]
+
+[ext_resource type="Shader" path="res://shader/retro_post_processing.gdshader" id="1_abu4j"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_leyfx"]
+noise_type = 4
+seed = 775
+frequency = 1.0
+fractal_octaves = 1
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_g88qb"]
+noise = SubResource("FastNoiseLite_leyfx")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_fqd3n"]
+shader = ExtResource("1_abu4j")
+shader_parameter/BANDS = 16
+shader_parameter/PIXEL_SIZE = 800
+shader_parameter/grain_amount = 0.0
+shader_parameter/grain_size = 1.0
+shader_parameter/NOISE_TEXTURE = SubResource("NoiseTexture2D_g88qb")
+
+[node name="retro_post_porcessing" type="CanvasLayer"]
+follow_viewport_enabled = true
+
+[node name="ColorRect" type="ColorRect" parent="."]
+top_level = true
+material = SubResource("ShaderMaterial_fqd3n")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
