@@ -1,4 +1,6 @@
-[gd_scene load_steps=13 format=3 uid="uid://uq76wjq4xyvo"]
+[gd_scene load_steps=14 format=3 uid="uid://bdwd4gqkc8a30"]
+
+[ext_resource type="Script" path="res://wind.gd" id="1_v84yx"]
 
 [sub_resource type="Curve" id="Curve_6dh0w"]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.7277, 0), 0.0, 0.0, 0, 0]
@@ -78,3 +80,4 @@ trail_enabled = true
 trail_lifetime = 1.0
 process_material = SubResource("ParticleProcessMaterial_bynn5")
 draw_pass_1 = SubResource("RibbonTrailMesh_xfgki")
+script = ExtResource("1_v84yx")

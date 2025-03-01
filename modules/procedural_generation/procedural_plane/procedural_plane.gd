@@ -127,6 +127,7 @@ func generate_multimesh():
 	# Create MultiMeshInstance3D and assign the MultiMesh resource
 	multi_mesh_instance = MultiMeshInstance3D.new()
 	multi_mesh_instance.multimesh = multi_mesh
+	multi_mesh_instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	multi_mesh_instance.visibility_range_begin_margin = 10.0
 	multi_mesh_instance.visibility_range_begin_margin = 50.0
 	

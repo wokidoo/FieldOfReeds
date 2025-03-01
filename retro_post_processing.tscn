@@ -13,8 +13,8 @@ noise = SubResource("FastNoiseLite_leyfx")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_fqd3n"]
 shader = ExtResource("1_abu4j")
-shader_parameter/BANDS = 16
-shader_parameter/PIXEL_SIZE = 800
+shader_parameter/BANDS = 12
+shader_parameter/PIXEL_SIZE = 1000
 shader_parameter/grain_amount = 0.0
 shader_parameter/grain_size = 1.0
 shader_parameter/NOISE_TEXTURE = SubResource("NoiseTexture2D_g88qb")

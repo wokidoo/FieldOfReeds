@@ -16,7 +16,7 @@ metadata/_preview_in_3d_space_ = true
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_3xrdu"]
 render_priority = 0
 shader = ExtResource("2_lrg6o")
-shader_parameter/primary_colour = Color(0.12238, 0.195284, 0.0205319, 1)
+shader_parameter/primary_colour = Color(0.12312, 0.17974, 0.047541, 1)
 shader_parameter/secondary_colour = Color(0.262513, 0.311456, 0.151713, 1)
 shader_parameter/weight = 0.0
 

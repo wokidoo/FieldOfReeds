@@ -1,5 +1,10 @@
 shader_type spatial;
-
+render_mode blend_mix, 
+			depth_draw_opaque, 
+			cull_disabled, 
+			diffuse_toon, 
+			specular_toon,
+			shadows_disabled;
 uniform vec3 primary_colour: source_color;
 uniform vec3 secondary_colour: source_color;
 uniform float weight:hint_range(0.0, 1.0);
