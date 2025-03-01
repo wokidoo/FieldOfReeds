@@ -1,0 +1,36 @@
+[gd_scene load_steps=6 format=3 uid="uid://h1e0r1lm5tkl"]
+
+[ext_resource type="Script" path="res://environment_manager.gd" id="1_w4u1p"]
+[ext_resource type="PackedScene" uid="uid://bdwd4gqkc8a30" path="res://wind.tscn" id="2_oud2g"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_u0joj"]
+sky_top_color = Color(0.940378, 0.767072, 0.685269, 1)
+sky_horizon_color = Color(0.776471, 0.423529, 0.176471, 1)
+ground_bottom_color = Color(0.4495, 0.253123, 0.312328, 1)
+ground_horizon_color = Color(0.776269, 0.422655, 0.176106, 1)
+
+[sub_resource type="Sky" id="Sky_kik0m"]
+sky_material = SubResource("ProceduralSkyMaterial_u0joj")
+
+[sub_resource type="Environment" id="Environment_kqesk"]
+background_mode = 2
+sky = SubResource("Sky_kik0m")
+ambient_light_source = 2
+ambient_light_color = Color(1, 1, 1, 1)
+ambient_light_energy = 2.0
+tonemap_mode = 3
+ssao_enabled = true
+ssao_horizon = 1.0
+sdfgi_read_sky_light = false
+sdfgi_probe_bias = 7.0
+fog_light_color = Color(0.27927, 0.305425, 0.346539, 1)
+fog_density = 0.7373
+volumetric_fog_density = 0.0606
+volumetric_fog_emission = Color(0.621524, 0.621524, 0.621524, 1)
+
+[node name="EnvironmentManager" type="WorldEnvironment"]
+environment = SubResource("Environment_kqesk")
+script = ExtResource("1_w4u1p")
+
+[node name="Wind" parent="." instance=ExtResource("2_oud2g")]
+amount_ratio = 0.0

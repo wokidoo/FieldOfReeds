@@ -1,34 +1,9 @@
-[gd_scene load_steps=14 format=3 uid="uid://clwirccbpvtvr"]
+[gd_scene load_steps=9 format=3 uid="uid://clwirccbpvtvr"]
 
 [ext_resource type="Script" path="res://player/player_3d.gd" id="1_0isju"]
 [ext_resource type="PackedScene" uid="uid://frvextu0jlu3" path="res://retro_post_processing.tscn" id="1_wucon"]
+[ext_resource type="PackedScene" uid="uid://h1e0r1lm5tkl" path="res://EnvironmentManager.tscn" id="2_kqv83"]
 [ext_resource type="PackedScene" uid="uid://g6ct688b0bmi" path="res://modules/terrain_manager.tscn" id="4_5c3ix"]
-[ext_resource type="PackedScene" uid="uid://bdwd4gqkc8a30" path="res://wind.tscn" id="4_bvmvh"]
-
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_u0joj"]
-sky_top_color = Color(0.940378, 0.767072, 0.685269, 1)
-sky_horizon_color = Color(0.776471, 0.423529, 0.176471, 1)
-ground_bottom_color = Color(0.4495, 0.253123, 0.312328, 1)
-ground_horizon_color = Color(0.776269, 0.422655, 0.176106, 1)
-
-[sub_resource type="Sky" id="Sky_kik0m"]
-sky_material = SubResource("ProceduralSkyMaterial_u0joj")
-
-[sub_resource type="Environment" id="Environment_kqesk"]
-background_mode = 2
-sky = SubResource("Sky_kik0m")
-ambient_light_source = 2
-ambient_light_color = Color(1, 1, 1, 1)
-ambient_light_energy = 2.0
-tonemap_mode = 3
-ssao_enabled = true
-ssao_horizon = 1.0
-sdfgi_read_sky_light = false
-sdfgi_probe_bias = 7.0
-fog_light_color = Color(0.27927, 0.305425, 0.346539, 1)
-fog_density = 0.7373
-volumetric_fog_density = 0.0606
-volumetric_fog_emission = Color(0.621524, 0.621524, 0.621524, 1)
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_f0mnh"]
 
@@ -47,20 +22,10 @@ fractal_type = 2
 fractal_octaves = 1
 domain_warp_type = 2
 
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_4wgyk"]
-frequency = 0.0001
-fractal_type = 0
-
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_vufu2"]
-noise = SubResource("FastNoiseLite_4wgyk")
-
 [node name="Node3D" type="Node3D"]
 
 [node name="CanvasLayer" parent="." instance=ExtResource("1_wucon")]
 visible = false
-
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource("Environment_kqesk")
 
 [node name="Player" type="CharacterBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0113856, 27.2926, -31.9228)
@@ -107,12 +72,7 @@ chunk_count = 25
 chunk_size = Vector2(50, 50)
 clutter_per_chunk = 8000
 
-[node name="Wind" parent="." node_paths=PackedStringArray("follow_target") instance=ExtResource("4_bvmvh")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0113856, 32.2926, -31.9228)
-amount_ratio = 0.4789
-follow_target = NodePath("../Player")
-
-[node name="ShaderGlobalsOverride" type="ShaderGlobalsOverride" parent="."]
-params/wind_direction = Vector3(1, 0, 0)
-params/wind_noise = SubResource("NoiseTexture2D_vufu2")
-params/wind_speed = 5.0
+[node name="EnvironmentManager" parent="." node_paths=PackedStringArray("player_refrence") instance=ExtResource("2_kqv83")]
+player_refrence = NodePath("../Player")
+wind_direction = Vector3(2.115, 0, 0)
+wind_speed = 5.5
