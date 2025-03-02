@@ -3,29 +3,29 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://b783em1jsgjh4"
-path="res://.godot/imported/grass_patch.glb-6452a50ef984663708670803ae2aeea3.scn"
+uid="uid://ck6yjqknt1jrs"
+path="res://.godot/imported/grass_patch_v3.glb-42c0bbb95a0d0f0ad9cdd48b052687bf.scn"
 
 [deps]
 
-source_file="res://modules/procedural_generation/procedural_plane/grass_patch.glb"
-dest_files=["res://.godot/imported/grass_patch.glb-6452a50ef984663708670803ae2aeea3.scn"]
+source_file="res://modules/procedural_generation/procedural_plane/grass_patch_v3.glb"
+dest_files=["res://.godot/imported/grass_patch_v3.glb-42c0bbb95a0d0f0ad9cdd48b052687bf.scn"]
 
 [params]
 
 nodes/root_type="MeshInstance3D"
-nodes/root_name="grass_patch"
+nodes/root_name="grass_patch_v3"
 nodes/apply_root_scale=true
 nodes/root_scale=0.7
 nodes/import_as_skeleton_bones=false
 meshes/ensure_tangents=true
 meshes/generate_lods=true
-meshes/create_shadow_meshes=true
+meshes/create_shadow_meshes=false
 meshes/light_baking=1
 meshes/lightmap_texel_size=0.2
 meshes/force_disable_compression=false
 skins/use_named_skins=true
-animation/import=true
+animation/import=false
 animation/fps=30
 animation/trimming=false
 animation/remove_immutable_tracks=true
@@ -33,19 +33,14 @@ animation/import_rest_as_RESET=false
 import_script/path=""
 _subresources={
 "meshes": {
-"grass_patch_Plane_016": {
+"grass_patch_v3_Plane_016": {
 "generate/lightmap_uv": 0,
 "generate/lods": 1,
-"generate/shadow_meshes": 2,
+"generate/shadow_meshes": 0,
 "lods/normal_merge_angle": 60.0,
-"lods/normal_split_angle": 25.0,
+"lods/normal_split_angle": 0.0,
 "save_to_file/enabled": true,
-"save_to_file/path": "res://grass_patch.res"
-}
-},
-"nodes": {
-"PATH:Grass": {
-"mesh_instance/cast_shadow": 0
+"save_to_file/path": "res://modules/procedural_generation/procedural_plane/grass_patch_v3.res"
 }
 }
 }

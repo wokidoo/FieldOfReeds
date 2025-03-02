@@ -1,6 +1,6 @@
 [gd_scene load_steps=14 format=3 uid="uid://bdwd4gqkc8a30"]
 
-[ext_resource type="Script" path="res://wind.gd" id="1_v84yx"]
+[ext_resource type="Script" path="res://modules/environment_manager/wind/wind.gd" id="1_v84yx"]
 
 [sub_resource type="Curve" id="Curve_6dh0w"]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.7277, 0), 0.0, 0.0, 0, 0]
@@ -35,7 +35,7 @@ particle_flag_align_y = true
 emission_shape_scale = Vector3(50, 25, 50)
 emission_shape = 3
 emission_box_extents = Vector3(1, 1, 1)
-direction = Vector3(2.115, 0, 0)
+direction = Vector3(1.25, 0, 0)
 spread = 0.0
 initial_velocity_min = 28.11
 initial_velocity_max = 28.11

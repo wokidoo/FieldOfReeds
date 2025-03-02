@@ -2,16 +2,18 @@
 
 [resource]
 code = "shader_type spatial;
-render_mode blend_mix, 
-			depth_draw_opaque, 
-			cull_disabled, 
-			diffuse_toon, 
+render_mode blend_mix,
+			depth_draw_opaque,
+			cull_disabled,
+			diffuse_toon,
 			specular_toon,
-			shadows_disabled;
+			shadows_disabled,
+			world_vertex_coords,
+			ensure_correct_normals;
 
 group_uniforms COLORS;
-uniform vec4 BaseColor : source_color = vec4(0.272880, 0.360000, 0.122400, 1.000000);
-uniform vec4 SecondaryColor : source_color = vec4(0.000000, 0.000000, 0.000000, 1.000000);
+uniform vec4 BaseColor : source_color = vec4(0.507, 0.319, 0.093,1.0);
+uniform vec4 SecondaryColor : source_color = vec4(0.13, 0.174, 0.025, 1.0);
 uniform float color_coefficient: hint_range(-1.0, 1.0) = 0.0;
 
 group_uniforms WIND;
@@ -49,19 +51,19 @@ vec3 sway(float mask,float intensity, float speed, vec3 direction, vec4 noise_te
 void vertex(){
 	//current blade height (0.0 - 1.0)
 	float height = (1.0-UV.y);
-	
+
 	//Used to choose which blades of grass will sway based off a noise map
 	vec4 sway_tex = texture(sway_noise,NODE_POSITION_WORLD.xz);
 	//sway effect
 	vec3 sway = sway(height,sway_intensity,sway_speed,sway_direction,sway_tex);
-	
+
 	vec4 wind_tex = texture(wind_noise,NODE_POSITION_WORLD.xz);
 	vec3 wind = wind_direction;
 	wind *= height;
 	wind *= mix(0.5,1.0,(sin(TIME * wind_speed * wind_tex.g)+1.0)/2.0);
 	//wind *= mix(-1.0,1.0,wind_tex.g);
 	wind.y = 0.0;
-	
+
 	VERTEX += sway;
 	VERTEX += wind;
 }
@@ -74,7 +76,5 @@ void fragment() {
 	ROUGHNESS = roughness;
 	NORMAL = NORMAL_DIRECTION;
 	NORMAL_MAP = NORMAL_DIRECTION;
-
-
 }
 "

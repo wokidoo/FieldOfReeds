@@ -1,9 +1,10 @@
-[gd_scene load_steps=9 format=3 uid="uid://clwirccbpvtvr"]
+[gd_scene load_steps=11 format=3 uid="uid://clwirccbpvtvr"]
 
 [ext_resource type="Script" path="res://player/player_3d.gd" id="1_0isju"]
-[ext_resource type="PackedScene" uid="uid://frvextu0jlu3" path="res://retro_post_processing.tscn" id="1_wucon"]
-[ext_resource type="PackedScene" uid="uid://h1e0r1lm5tkl" path="res://EnvironmentManager.tscn" id="2_kqv83"]
-[ext_resource type="PackedScene" uid="uid://g6ct688b0bmi" path="res://modules/terrain_manager.tscn" id="4_5c3ix"]
+[ext_resource type="PackedScene" uid="uid://frvextu0jlu3" path="res://post_processing/retro_post_processing.tscn" id="1_wucon"]
+[ext_resource type="PackedScene" uid="uid://h1e0r1lm5tkl" path="res://modules/environment_manager/EnvironmentManager.tscn" id="2_kqv83"]
+[ext_resource type="Script" path="res://modules/procedural_generation/terrain_manager/terrain_manager.gd" id="4_u65xw"]
+[ext_resource type="Shader" path="res://modules/procedural_generation/procedural_plane/rock.gdshader" id="5_liil6"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_f0mnh"]
 
@@ -14,21 +15,21 @@ height = 0.75
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_0a4fc"]
 
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_gwp7u"]
-resource_local_to_scene = true
-seed = 85
-frequency = 0.0045
-fractal_type = 2
-fractal_octaves = 1
-domain_warp_type = 2
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_ux0w1"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_dow10"]
+render_priority = 0
+shader = ExtResource("5_liil6")
+shader_parameter/primary_colour = Color(0.13, 0.174, 0.025, 1)
+shader_parameter/secondary_colour = null
+shader_parameter/weight = null
 
 [node name="Node3D" type="Node3D"]
 
 [node name="CanvasLayer" parent="." instance=ExtResource("1_wucon")]
-visible = false
 
 [node name="Player" type="CharacterBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0113856, 27.2926, -31.9228)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.01138, 9.2926, 10.0772)
 script = ExtResource("1_0isju")
 ROTATE_SPEED = 5.0
 PITCH_LIMITS = Vector2(40, 90)
@@ -65,14 +66,15 @@ unique_name_in_owner = true
 transform = Transform3D(-4.37114e-08, -1, 4.37114e-08, 0, -4.37114e-08, -1, 1, -4.37114e-08, 1.91069e-15, 0, 0, 0)
 far = 200.0
 
-[node name="TerrainManager" parent="." instance=ExtResource("4_5c3ix")]
-terrain_map = SubResource("FastNoiseLite_gwp7u")
-height = 5
-chunk_count = 25
-chunk_size = Vector2(50, 50)
-clutter_per_chunk = 8000
-
 [node name="EnvironmentManager" parent="." node_paths=PackedStringArray("player_refrence") instance=ExtResource("2_kqv83")]
 player_refrence = NodePath("../Player")
-wind_direction = Vector3(2.115, 0, 0)
-wind_speed = 5.5
+wind_direction = Vector3(2, 0, 0)
+wind_speed = 5.0
+
+[node name="TerrainManager" type="Node3D" parent="."]
+script = ExtResource("4_u65xw")
+terrain_map = SubResource("FastNoiseLite_ux0w1")
+terrain_material = SubResource("ShaderMaterial_dow10")
+height = 10
+chunk_count = 25
+clutter_count = 7000

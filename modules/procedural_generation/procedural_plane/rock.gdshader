@@ -5,7 +5,7 @@ render_mode blend_mix,
 			diffuse_toon, 
 			specular_toon,
 			shadows_disabled;
-uniform vec3 primary_colour: source_color;
+uniform vec3 primary_colour: source_color = vec3(0.13, 0.174, 0.025);
 uniform vec3 secondary_colour: source_color;
 uniform float weight:hint_range(0.0, 1.0);
 varying vec3 local_normal;
