@@ -1,0 +1,42 @@
+[gd_resource type="ShaderMaterial" load_steps=6 format=3 uid="uid://d6igh3j2g12g"]
+
+[ext_resource type="Shader" path="res://modules/procedural_generation/terrain_manager/water_shader.gdshader" id="1_e7ssd"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_y5v8p"]
+noise_type = 2
+seed = -230
+frequency = 0.1268
+fractal_type = 0
+cellular_return_type = 6
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_uxpee"]
+width = 1080
+height = 1080
+invert = true
+in_3d_space = true
+seamless = true
+noise = SubResource("FastNoiseLite_y5v8p")
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_ws7jd"]
+noise_type = 2
+frequency = 0.0747
+fractal_type = 0
+cellular_return_type = 6
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_oy3og"]
+width = 1080
+height = 1080
+invert = true
+in_3d_space = true
+seamless = true
+noise = SubResource("FastNoiseLite_ws7jd")
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_e7ssd")
+shader_parameter/primary_color = Color(0.0944553, 0.278446, 0.302573, 1)
+shader_parameter/secondary_color = Color(0.151954, 0.428641, 0.534382, 1)
+shader_parameter/proximity_scale = 1.0
+shader_parameter/proximity_color = Color(0.235493, 0.629899, 0.79212, 1)
+shader_parameter/NOISE_TEXTURE_1 = SubResource("NoiseTexture2D_uxpee")
+shader_parameter/NOISE_TEXTURE_2 = SubResource("NoiseTexture2D_oy3og")

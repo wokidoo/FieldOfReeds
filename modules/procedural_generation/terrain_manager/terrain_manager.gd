@@ -22,13 +22,23 @@ class_name TerrainManager
 @export var clutter_count: int = 20000
 @export var clutter_mesh: Mesh = preload("res://modules/procedural_generation/procedural_plane/grass_patch_v3.res")
 
+@export_category("Water")
+@export var water_level: float = 0.0:
+	set(new_val):
+		if water:
+			water_level = new_val
+			water.position.y = water_level
+			RenderingServer.global_shader_parameter_set("water_level",water_level)
+@export var water_material: Material
+
 var chunks: Array[ProceduralPlane] = []
+var water: MeshInstance3D
 
 # Called when the node enters the scene tree for the first time.
-func _ready():
+func _ready() -> void:
 	generates_terrain()
 
-func generates_terrain():
+func generates_terrain() -> void:
 	# Clear existing chunks
 	for chunk in chunks:
 		if chunk != null:
@@ -63,8 +73,9 @@ func generates_terrain():
 		# generate clutter for each chunk	
 		print("Chunk %s plane generated" % i)
 	generate_clutter()
+	generate_water()
 
-func generate_clutter():
+func generate_clutter() -> void:
 	print("Generating clutter...")
 	# Create multimesh resource 
 	var multi_mesh_resource = MultiMesh.new()
@@ -102,5 +113,27 @@ func generate_clutter():
 		
 		print("Chunk %s clutter generated" % chunk.get_index())
 		
-func get_terrain_height(x:float, z:float) -> float:
-	return terrain_map.get_noise_2d(x,z) * height
+func generate_water() -> void:
+	print("Generating water...")
+	# Remvove old water mesh
+	if water:
+		water.queue_free()
+	
+	var water_mesh:Mesh = PlaneMesh.new()
+	water_mesh.size = Vector2(1000.0,1000.0)
+	water_mesh.subdivide_width = water_mesh.size.x
+	water_mesh.subdivide_depth = water_mesh.size.y
+	water_mesh.material = water_material
+	
+	# creating mesh instance using mesh data
+	var st = SurfaceTool.new()
+	# creating vertex array from plane mesh
+	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	st.create_from(water_mesh,0)
+	st.generate_normals()
+	
+	water = MeshInstance3D.new()
+	water.mesh =  st.commit()
+	water.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	water.position.y = water_level
+	add_child(water)

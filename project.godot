@@ -66,3 +66,7 @@ wind_speed={
 "type": "float",
 "value": 0.0
 }
+water_level={
+"type": "float",
+"value": 0.0
+}

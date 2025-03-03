@@ -1,10 +1,11 @@
-[gd_scene load_steps=11 format=3 uid="uid://clwirccbpvtvr"]
+[gd_scene load_steps=12 format=3 uid="uid://clwirccbpvtvr"]
 
 [ext_resource type="Script" path="res://player/player_3d.gd" id="1_0isju"]
 [ext_resource type="PackedScene" uid="uid://frvextu0jlu3" path="res://post_processing/retro_post_processing.tscn" id="1_wucon"]
 [ext_resource type="PackedScene" uid="uid://h1e0r1lm5tkl" path="res://modules/environment_manager/EnvironmentManager.tscn" id="2_kqv83"]
 [ext_resource type="Script" path="res://modules/procedural_generation/terrain_manager/terrain_manager.gd" id="4_u65xw"]
 [ext_resource type="Shader" path="res://modules/procedural_generation/procedural_plane/rock.gdshader" id="5_liil6"]
+[ext_resource type="Material" uid="uid://d6igh3j2g12g" path="res://modules/procedural_generation/terrain_manager/water_shader.tres" id="6_5ior6"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_f0mnh"]
 
@@ -16,6 +17,14 @@ height = 0.75
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_0a4fc"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_ux0w1"]
+frequency = 0.012
+fractal_type = 2
+fractal_octaves = 1
+cellular_distance_function = 1
+cellular_jitter = -0.645
+cellular_return_type = 6
+domain_warp_type = 1
+domain_warp_amplitude = 11.455
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_dow10"]
 render_priority = 0
@@ -68,13 +77,13 @@ far = 200.0
 
 [node name="EnvironmentManager" parent="." node_paths=PackedStringArray("player_refrence") instance=ExtResource("2_kqv83")]
 player_refrence = NodePath("../Player")
-wind_direction = Vector3(1, 0, 0)
-wind_speed = 5.0
 
 [node name="TerrainManager" type="Node3D" parent="."]
 script = ExtResource("4_u65xw")
 terrain_map = SubResource("FastNoiseLite_ux0w1")
 terrain_material = SubResource("ShaderMaterial_dow10")
-height = 10
+height = 5
 chunk_count = 25
 clutter_count = 7000
+water_level = 0.3
+water_material = ExtResource("6_5ior6")
