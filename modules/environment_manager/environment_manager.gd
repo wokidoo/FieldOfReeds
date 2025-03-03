@@ -30,7 +30,7 @@ class_name EnvironmentManager
 			else:
 				wind.amount_ratio = 1.0
 
-var wind: Wind = preload("res://modules/environment_manager/wind/wind.tscn").instantiate()
+@onready var wind: Wind = $Wind
 
 func _ready():
 	wind.process_material.direction = wind_direction

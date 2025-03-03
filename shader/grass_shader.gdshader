@@ -5,6 +5,7 @@ render_mode blend_mix,
 			diffuse_toon,
 			specular_toon,
 			shadows_disabled,
+			world_vertex_coords,
 			ensure_correct_normals;
 
 group_uniforms COLORS;
@@ -27,6 +28,9 @@ group_uniforms MISC;
 uniform float water_level_margin = 2.35;
 uniform float roughness: hint_range(0.0, 1.0) = 0.0;
 global uniform float water_level;
+
+varying vec3 WORLD_POSITION;
+varying bool REMOVE_BLADE;
 
 const vec3 NORMAL_DIRECTION = vec3(0.0,1.0,0.0);
 
@@ -61,18 +65,14 @@ void vertex(){
 	wind *= mix(0.5,1.0,(sin(TIME * wind_speed * wind_tex.g)+1.0)/2.0);
 	//wind *= mix(-1.0,1.0,wind_tex.g);
 	wind.y = 0.0;
-
+	
 	VERTEX += sway;
 	VERTEX += wind;
 	
-	float world_y = (MODEL_MATRIX * vec4(VERTEX,1.0)).y;
-	if(world_y < water_level+water_level_margin){
-		VERTEX = vec3(0.0);
-	}
+	WORLD_POSITION = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
 }
 
 void fragment() {
-	//Mix base and secondary colors from top to bottom of grass blade
 	vec3 colour = mix(BaseColor.rgb,SecondaryColor.rgb,color_coefficient+UV.y);
 
 	ALBEDO = colour;

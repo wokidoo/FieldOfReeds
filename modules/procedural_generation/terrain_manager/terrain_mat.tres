@@ -8,4 +8,4 @@ shader = ExtResource("1_s3qml")
 shader_parameter/primary_colour = Color(0.13, 0.174, 0.025, 1)
 shader_parameter/secondary_colour = Color(0.389287, 0.389287, 0.389287, 1)
 shader_parameter/weight = 0.0
-shader_parameter/water_level_margin = 0.0
+shader_parameter/water_level_margin = 1.63

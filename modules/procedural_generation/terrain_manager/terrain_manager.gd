@@ -7,6 +7,10 @@ class_name TerrainManager
 		regenerate_terrain = false
 		generate_terrain()
 
+@export var regenerate_clutter := false :
+	set(new_reload):
+		regenerate_terrain = false
+		generate_clutter()
 
 @export var terrain_map: FastNoiseLite
 @export var height: int = 1
@@ -21,6 +25,10 @@ class_name TerrainManager
 @export_category("Clutter")
 @export var clutter_count: int = 5000
 @export var clutter_mesh: Mesh = preload("res://meshes/grass_patch_v3.res")
+@export var clutter_height_cutoff: float = 0.0:
+	set(new_val):
+		clutter_height_cutoff = new_val
+		call_deferred("generate_clutter")
 
 @export_category("Water")
 @export var water_level: float = 0.0:
@@ -29,6 +37,7 @@ class_name TerrainManager
 			water_level = new_val
 			water.position.y = water_level
 			RenderingServer.global_shader_parameter_set("water_level",water_level)
+
 @export var water_material: Material
 
 var chunks: Array[MeshInstance3D] = []
@@ -69,12 +78,6 @@ func generate_terrain() -> void:
 
 func generate_clutter() -> void:
 	print_debug("Generating clutter...")
-	# Create multimesh resource 
-	var multi_mesh_resource = MultiMesh.new()
-	multi_mesh_resource.mesh = clutter_mesh
-	multi_mesh_resource.transform_format = MultiMesh.TRANSFORM_3D
-	multi_mesh_resource.instance_count = clutter_count
-	var total_time: float =0.0
 	# Iterate through each chunk
 	for chunk in chunks:
 		# Remove old clutter and MultiMeshInstance in each chunk
@@ -82,31 +85,44 @@ func generate_clutter() -> void:
 			if child is MultiMeshInstance3D or child.is_in_group("clutter"):
 				chunk.remove_child(child)
 				child.queue_free()
-		
-		var multi_mesh_instance: MultiMeshInstance3D = MultiMeshInstance3D.new()
-		multi_mesh_instance.multimesh = multi_mesh_resource.duplicate()
-		multi_mesh_instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-		multi_mesh_instance.visibility_range_begin_margin = 10.0
-		multi_mesh_instance.visibility_range_begin_margin = 50.0
-		multi_mesh_instance.add_to_group("clutter")
-		
-		# Add new MultMeshInstance to chunk
-		chunk.add_child(multi_mesh_instance)
-		
+
+		# Create a new MultiMesh resource for this chunk
+		var multi_mesh_resource = MultiMesh.new()
+		multi_mesh_resource.mesh = clutter_mesh
+		multi_mesh_resource.transform_format = MultiMesh.TRANSFORM_3D
+
+		# Temporary list to store valid transforms
+		var valid_transforms: Array[Transform3D] = []
+
 		for i in range(clutter_count):
-			# Create temporary copy of terrain map to not modify the original texture
-			var noise_tex_temp = terrain_map.duplicate()
-			# Set the offset to the current chunk position to generate clutter in the right places
-			noise_tex_temp.offset = Vector3(chunk.position.x,chunk.position.z,0.0)
+			# Generate random position within the chunk
 			var x := randf_range(-chunk_size.x / 2.0, chunk_size.x / 2.0)
 			var z := randf_range(-chunk_size.y / 2.0, chunk_size.y / 2.0)
-			var y = noise_tex_temp.get_noise_2d(x,z)*height
-			var transform = Transform3D()
-			transform = transform.translated(Vector3(x, y, z))
-			transform = transform.rotated_local(Vector3.UP,randf_range(-PI,PI))
-			multi_mesh_instance.multimesh.set_instance_transform(i, transform)
-		
+			var y = terrain_map.get_noise_2d(chunk.position.x + x, chunk.position.z + z) * height
+
+			# Check if the position is above the water level
+			if y >= clutter_height_cutoff:
+				var transform = Transform3D()
+				transform.origin = Vector3(x, y, z)
+				transform = transform.rotated_local(Vector3.UP, randf_range(-PI, PI))
+				valid_transforms.append(transform)
+
+		# Set instance count based on valid transforms
+		multi_mesh_resource.instance_count = valid_transforms.size()
+
+		# Assign transforms to MultiMesh instances
+		for i in range(valid_transforms.size()):
+			multi_mesh_resource.set_instance_transform(i, valid_transforms[i])
+
+		# Create MultiMeshInstance and add it to the chunk
+		var multi_mesh_instance: MultiMeshInstance3D = MultiMeshInstance3D.new()
+		multi_mesh_instance.multimesh = multi_mesh_resource
+		multi_mesh_instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		multi_mesh_instance.add_to_group("clutter")
+		chunk.add_child(multi_mesh_instance)
+
 		print_debug("Chunk %s clutter generated" % chunk.get_index())
+
 		
 func generate_water() -> void:
 	print_debug("Generating water...")

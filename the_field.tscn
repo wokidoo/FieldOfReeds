@@ -71,14 +71,17 @@ far = 200.0
 
 [node name="EnvironmentManager" parent="." node_paths=PackedStringArray("player_refrence") instance=ExtResource("2_kqv83")]
 player_refrence = NodePath("../Player")
-wind_direction = Vector3(2, 0, 0)
+wind_direction = Vector3(2.195, 0, 0)
 wind_speed = 5.0
 
 [node name="TerrainManager" type="Node3D" parent="."]
 script = ExtResource("4_u65xw")
+regenerate_clutter = null
 terrain_map = SubResource("FastNoiseLite_ux0w1")
 height = 5
 chunk_count = 25
 chunk_material = ExtResource("6_ew471")
-water_level = 0.225
+clutter_count = 4000
+clutter_height_cutoff = 1.61
+water_level = -0.89
 water_material = ExtResource("6_5ior6")

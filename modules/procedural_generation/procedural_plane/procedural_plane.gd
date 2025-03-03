@@ -38,9 +38,9 @@ static func generate_mesh(
 	height:float, 
 	subdivisions:int, 
 	material:Material) -> MeshInstance3D:
-	# Create duplicat of texure to avoid modifiying original
+	# Create duplicat of texure to avoid modifiying the original
 	var noise_tex_temp:FastNoiseLite = noise_texture.duplicate()
-	# Offset texture to mesh position so the mesh can be stitched with other planes
+	# Set temp noise texture offset so the mesh can be stitched with other planes
 	noise_tex_temp.offset= Vector3(texture_offset.x,texture_offset.y,0.0)
 	print_debug("Generating mesh data")
 	# create flat plane mesh as a base
