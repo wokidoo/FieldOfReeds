@@ -1,11 +1,11 @@
-[gd_scene load_steps=11 format=3 uid="uid://clwirccbpvtvr"]
+[gd_scene load_steps=12 format=3 uid="uid://clwirccbpvtvr"]
 
 [ext_resource type="Script" path="res://player/player_3d.gd" id="1_0isju"]
 [ext_resource type="PackedScene" uid="uid://frvextu0jlu3" path="res://post_processing/retro_post_processing.tscn" id="1_wucon"]
 [ext_resource type="PackedScene" uid="uid://h1e0r1lm5tkl" path="res://modules/environment_manager/EnvironmentManager.tscn" id="2_kqv83"]
 [ext_resource type="Script" path="res://modules/procedural_generation/terrain_manager/terrain_manager.gd" id="4_u65xw"]
+[ext_resource type="Shader" path="res://shader/rock.gdshader" id="5_liil6"]
 [ext_resource type="Material" uid="uid://d6igh3j2g12g" path="res://modules/procedural_generation/terrain_manager/water_mat.tres" id="6_5ior6"]
-[ext_resource type="Material" uid="uid://dd353rtouf7ni" path="res://modules/procedural_generation/terrain_manager/terrain_mat.tres" id="6_ew471"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_f0mnh"]
 
@@ -17,22 +17,29 @@ height = 0.75
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_0a4fc"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_ux0w1"]
-seed = 15
-frequency = 0.0088
+frequency = 0.012
 fractal_type = 2
-fractal_octaves = 2
+fractal_octaves = 1
 cellular_distance_function = 1
 cellular_jitter = -0.645
 cellular_return_type = 6
 domain_warp_type = 1
 domain_warp_amplitude = 11.455
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_dow10"]
+render_priority = 0
+shader = ExtResource("5_liil6")
+shader_parameter/primary_colour = Color(0.13, 0.174, 0.025, 1)
+shader_parameter/secondary_colour = Color(0.285042, 0.326919, 0.299405, 1)
+shader_parameter/weight = null
+shader_parameter/water_level_margin = 0.505
+
 [node name="Node3D" type="Node3D"]
 
 [node name="CanvasLayer" parent="." instance=ExtResource("1_wucon")]
 
 [node name="Player" type="CharacterBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.01138, 25.2907, 10.0772)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.01138, 9.2926, 10.0772)
 script = ExtResource("1_0isju")
 ROTATE_SPEED = 5.0
 PITCH_LIMITS = Vector2(40, 90)
@@ -77,8 +84,9 @@ wind_speed = 5.0
 [node name="TerrainManager" type="Node3D" parent="."]
 script = ExtResource("4_u65xw")
 terrain_map = SubResource("FastNoiseLite_ux0w1")
+terrain_material = SubResource("ShaderMaterial_dow10")
 height = 5
 chunk_count = 25
-chunk_material = ExtResource("6_ew471")
-water_level = 0.225
+clutter_count = 7000
+water_level = 1.675
 water_material = ExtResource("6_5ior6")

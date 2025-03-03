@@ -1,30 +1,6 @@
-[gd_scene load_steps=5 format=3 uid="uid://bjmcdggeahrkj"]
+[gd_scene load_steps=2 format=3 uid="uid://bjmcdggeahrkj"]
 
 [ext_resource type="Script" path="res://modules/procedural_generation/procedural_plane/procedural_plane.gd" id="1_ff1yh"]
-[ext_resource type="Shader" path="res://modules/procedural_generation/procedural_plane/rock.gdshader" id="2_lrg6o"]
-
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_n7jsy"]
-resource_local_to_scene = true
-noise_type = 2
-frequency = 0.006
-fractal_type = 2
-fractal_octaves = 1
-cellular_distance_function = 2
-cellular_jitter = 1.065
-metadata/_preview_in_3d_space_ = true
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_3xrdu"]
-render_priority = 0
-shader = ExtResource("2_lrg6o")
-shader_parameter/primary_colour = Color(0.12312, 0.17974, 0.047541, 1)
-shader_parameter/secondary_colour = Color(0.262513, 0.311456, 0.151713, 1)
-shader_parameter/weight = 0.0
 
 [node name="ProceduralPlane" type="Node3D"]
 script = ExtResource("1_ff1yh")
-auto_regenerate = true
-mesh_texture = SubResource("FastNoiseLite_n7jsy")
-size = Vector2(50, 50)
-material = SubResource("ShaderMaterial_3xrdu")
-height = 14.155
-instance_count = 5000

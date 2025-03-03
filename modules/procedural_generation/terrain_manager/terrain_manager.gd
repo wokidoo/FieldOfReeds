@@ -5,22 +5,22 @@ class_name TerrainManager
 @export var regenerate_terrain := false :
 	set(new_reload):
 		regenerate_terrain = false
-		generates_terrain()
+		generate_terrain()
 
 
 @export var terrain_map: FastNoiseLite
-@export var terrain_material: Material
 @export var height: int = 1
 
 @export_category("Chunks")
 @export var chunk_count: int = 9
 @export var chunk_size: Vector2 = Vector2(50,50)
-@export_range(1,6) var chunk_render_distance: int = 1
+@export var subdivisions: int = 1
+@export var chunk_material: Material
 
 
 @export_category("Clutter")
-@export var clutter_count: int = 20000
-@export var clutter_mesh: Mesh = preload("res://modules/procedural_generation/procedural_plane/grass_patch_v3.res")
+@export var clutter_count: int = 5000
+@export var clutter_mesh: Mesh = preload("res://meshes/grass_patch_v3.res")
 
 @export_category("Water")
 @export var water_level: float = 0.0:
@@ -31,52 +31,44 @@ class_name TerrainManager
 			RenderingServer.global_shader_parameter_set("water_level",water_level)
 @export var water_material: Material
 
-var chunks: Array[ProceduralPlane] = []
+var chunks: Array[MeshInstance3D] = []
 var water: MeshInstance3D
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	generates_terrain()
+	RenderingServer.global_shader_parameter_set("water_level",water_level)
+	generate_terrain()
 
-func generates_terrain() -> void:
+func generate_terrain() -> void:
 	# Clear existing chunks
 	for chunk in chunks:
 		if chunk != null:
 			chunk.queue_free()  # Remove from scene
 	chunks.clear()  # Empty the array
 
-	var grid_size = int(sqrt(chunk_count))  # Ensure chunk_count is valid
-	var half_grid_size = grid_size / 2.0  # Used to center the grid
+	var grid_size:int = int(sqrt(chunk_count))  # Ensure chunk_count is valid
+	var half_grid_size:int = grid_size / 2.0  # Used to center the grid
 	
-	print("Generating chunk planes...")
+	print_debug("Generating chunk meshes...")
 	for i in range(chunk_count):
-		var x = i % grid_size  # Column index
-		var y = i / grid_size  # Row index
+		var col = (i % grid_size)  # Column index
+		var row = i / grid_size  # Row index
+		
+		var x = (col - half_grid_size)*chunk_size.x
+		var z = (row - half_grid_size)*chunk_size.y
 
-		var chunk = ProceduralPlane.new()  # Ensure ProceduralPlane is correctly defined
-		chunk.size = chunk_size
-		chunk.height = height
-		chunk.material = terrain_material
-		chunk.mesh_texture = terrain_map.duplicate()
-		chunk.instance_count = max(0,clutter_count)
-
-		# Positioning in a centered grid
-		chunk.transform.origin = Vector3(
-			(x - half_grid_size) * chunk_size.x + chunk_size.x / 2.0,  # Shift center
-			0,
-			(y - half_grid_size) * chunk_size.y + chunk_size.y / 2.0   # Shift center
-		)
+		var chunk:MeshInstance3D = ProceduralPlane.generate_mesh(terrain_map,Vector2(x,z),chunk_size,height,subdivisions,chunk_material)
+		chunk.position = Vector3(x,0.0,z)
 		self.add_child(chunk)
-		chunk.generate_mesh()
 		# Store the chunk in the array
 		chunks.append(chunk)
 		# generate clutter for each chunk	
-		print("Chunk %s plane generated" % i)
+		print_debug("Chunk %s plane generated" % i)
 	generate_clutter()
 	generate_water()
 
 func generate_clutter() -> void:
-	print("Generating clutter...")
+	print_debug("Generating clutter...")
 	# Create multimesh resource 
 	var multi_mesh_resource = MultiMesh.new()
 	multi_mesh_resource.mesh = clutter_mesh
@@ -102,19 +94,22 @@ func generate_clutter() -> void:
 		chunk.add_child(multi_mesh_instance)
 		
 		for i in range(clutter_count):
+			# Create temporary copy of terrain map to not modify the original texture
+			var noise_tex_temp = terrain_map.duplicate()
+			# Set the offset to the current chunk position to generate clutter in the right places
+			noise_tex_temp.offset = Vector3(chunk.position.x,chunk.position.z,0.0)
 			var x := randf_range(-chunk_size.x / 2.0, chunk_size.x / 2.0)
 			var z := randf_range(-chunk_size.y / 2.0, chunk_size.y / 2.0)
-			var y = chunk.mesh_texture.get_noise_2d(x,z)*height
-			#print(chunk.mesh_texture.get_noise_2d(x,z)," - ",terrain_map.get_noise_2d(x,z))
+			var y = noise_tex_temp.get_noise_2d(x,z)*height
 			var transform = Transform3D()
 			transform = transform.translated(Vector3(x, y, z))
 			transform = transform.rotated_local(Vector3.UP,randf_range(-PI,PI))
 			multi_mesh_instance.multimesh.set_instance_transform(i, transform)
 		
-		print("Chunk %s clutter generated" % chunk.get_index())
+		print_debug("Chunk %s clutter generated" % chunk.get_index())
 		
 func generate_water() -> void:
-	print("Generating water...")
+	print_debug("Generating water...")
 	# Remvove old water mesh
 	if water:
 		water.queue_free()

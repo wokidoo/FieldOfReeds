@@ -1,6 +1,6 @@
 [gd_resource type="ShaderMaterial" load_steps=6 format=3 uid="uid://d6igh3j2g12g"]
 
-[ext_resource type="Shader" path="res://modules/procedural_generation/terrain_manager/water_shader.gdshader" id="1_e7ssd"]
+[ext_resource type="Shader" path="res://shader/water.gdshader" id="1_e7ssd"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_y5v8p"]
 noise_type = 2

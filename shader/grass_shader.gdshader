@@ -1,7 +1,4 @@
-[gd_resource type="Shader" format=3 uid="uid://cmcvntql02hv4"]
-
-[resource]
-code = "shader_type spatial;
+shader_type spatial;
 render_mode blend_mix,
 			depth_draw_opaque,
 			cull_disabled,
@@ -83,4 +80,3 @@ void fragment() {
 	NORMAL = NORMAL_DIRECTION;
 	NORMAL_MAP = NORMAL_DIRECTION;
 }
-"

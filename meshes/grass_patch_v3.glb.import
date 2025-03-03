@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://ck6yjqknt1jrs"
-path="res://.godot/imported/grass_patch_v3.glb-42c0bbb95a0d0f0ad9cdd48b052687bf.scn"
+path="res://.godot/imported/grass_patch_v3.glb-7568075cdf035595d4741a0645e02731.scn"
 
 [deps]
 
-source_file="res://modules/procedural_generation/procedural_plane/grass_patch_v3.glb"
-dest_files=["res://.godot/imported/grass_patch_v3.glb-42c0bbb95a0d0f0ad9cdd48b052687bf.scn"]
+source_file="res://meshes/grass_patch_v3.glb"
+dest_files=["res://.godot/imported/grass_patch_v3.glb-7568075cdf035595d4741a0645e02731.scn"]
 
 [params]
 
@@ -39,7 +39,7 @@ _subresources={
 "generate/shadow_meshes": 0,
 "lods/normal_merge_angle": 60.0,
 "lods/normal_split_angle": 0.0,
-"save_to_file/enabled": true,
+"save_to_file/enabled": false,
 "save_to_file/path": "res://modules/procedural_generation/procedural_plane/grass_patch_v3.res"
 }
 }

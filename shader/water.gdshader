@@ -28,6 +28,6 @@ void fragment() {
 	vec3 color = mix(primary_color,secondary_color*proximity,noise_1*noise_2);
 	color += proximity_color * proximity;
 	ALBEDO = color;
-	ALPHA = 0.80 * (1.0-proximity);
+	ALPHA = (1.0-proximity);
 }
 
