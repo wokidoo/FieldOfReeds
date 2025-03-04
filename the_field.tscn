@@ -20,18 +20,18 @@ domain_warp_frequency = 0.0
 [node name="TerrainManager" type="Node3D" parent="."]
 script = ExtResource("4_u65xw")
 terrain_map = SubResource("FastNoiseLite_ux0w1")
-height = 30
-chunk_size = Vector2(200, 200)
+height = 10
+chunk_size = Vector2(100, 100)
 chunk_material = ExtResource("6_ew471")
 clutter_count = 20000
-clutter_height_cutoff = 7.0
-clutter_height_noise = 5.0
+clutter_height_cutoff = -15.0
+water_level = -15.0
 water_material = ExtResource("6_5ior6")
 
 [node name="EnvironmentManager" parent="." instance=ExtResource("2_kqv83")]
 
 [node name="PreviewCam" parent="." instance=ExtResource("6_ow7vk")]
 spring_length = 208.91
-speed = 20.1
+speed = 20.0
 
 [editable path="CanvasLayer"]
