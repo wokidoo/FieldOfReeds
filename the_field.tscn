@@ -1,85 +1,40 @@
-[gd_scene load_steps=11 format=3 uid="uid://clwirccbpvtvr"]
+[gd_scene load_steps=8 format=3 uid="uid://clwirccbpvtvr"]
 
-[ext_resource type="Script" path="res://player/player_3d.gd" id="1_0isju"]
 [ext_resource type="PackedScene" uid="uid://frvextu0jlu3" path="res://post_processing/retro_post_processing.tscn" id="1_wucon"]
 [ext_resource type="PackedScene" uid="uid://h1e0r1lm5tkl" path="res://modules/environment_manager/EnvironmentManager.tscn" id="2_kqv83"]
 [ext_resource type="Script" path="res://modules/procedural_generation/terrain_manager/terrain_manager.gd" id="4_u65xw"]
 [ext_resource type="Material" uid="uid://d6igh3j2g12g" path="res://modules/procedural_generation/terrain_manager/water_mat.tres" id="6_5ior6"]
 [ext_resource type="Material" uid="uid://dd353rtouf7ni" path="res://modules/procedural_generation/terrain_manager/terrain_mat.tres" id="6_ew471"]
-
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_f0mnh"]
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_og10i"]
-top_radius = 0.0
-bottom_radius = 0.1
-height = 0.75
-
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_0a4fc"]
+[ext_resource type="PackedScene" uid="uid://cndxlexamh16n" path="res://modules/preview_cam/preview_cam.tscn" id="6_ow7vk"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_ux0w1"]
-seed = 15
-frequency = 0.0088
-fractal_type = 2
-fractal_octaves = 2
-cellular_distance_function = 1
-cellular_jitter = -0.645
-cellular_return_type = 6
-domain_warp_type = 1
-domain_warp_amplitude = 11.455
+seed = 18
+fractal_type = 0
+fractal_octaves = 1
+domain_warp_frequency = 0.0
 
 [node name="Node3D" type="Node3D"]
 
 [node name="CanvasLayer" parent="." instance=ExtResource("1_wucon")]
 
-[node name="Player" type="CharacterBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.01138, 25.2907, 10.0772)
-script = ExtResource("1_0isju")
-ROTATE_SPEED = 5.0
-PITCH_LIMITS = Vector2(40, 90)
-
-[node name="body_mesh" type="MeshInstance3D" parent="Player"]
-mesh = SubResource("CapsuleMesh_f0mnh")
-skeleton = NodePath("../CollisionShape3D")
-
-[node name="forward_pointer" type="MeshInstance3D" parent="Player/body_mesh"]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, -1.22892)
-mesh = SubResource("CylinderMesh_og10i")
-skeleton = NodePath("../..")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Player"]
-shape = SubResource("CapsuleShape3D_0a4fc")
-
-[node name="CameraArm" type="SpringArm3D" parent="Player"]
-unique_name_in_owner = true
-collision_mask = 0
-spring_length = 5.0
-
-[node name="CameraVerticalOffset" type="SpringArm3D" parent="Player/CameraArm"]
-unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
-collision_mask = 0
-
-[node name="CameraHorizontalOffset" type="SpringArm3D" parent="Player/CameraArm/CameraVerticalOffset"]
-unique_name_in_owner = true
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 0)
-collision_mask = 0
-
-[node name="Camera3D" type="Camera3D" parent="Player/CameraArm/CameraVerticalOffset/CameraHorizontalOffset"]
-unique_name_in_owner = true
-transform = Transform3D(-4.37114e-08, -1, 4.37114e-08, 0, -4.37114e-08, -1, 1, -4.37114e-08, 1.91069e-15, 0, 0, 0)
-far = 200.0
-
 [node name="TerrainManager" type="Node3D" parent="."]
 script = ExtResource("4_u65xw")
 terrain_map = SubResource("FastNoiseLite_ux0w1")
-height = 5
+height = 10
 chunk_count = 25
+chunk_size = Vector2(100, 100)
 chunk_material = ExtResource("6_ew471")
-clutter_count = 4000
-clutter_height_cutoff = 2.135
+clutter_count = 10000
+clutter_height_cutoff = -1.435
+water_level = -2.28
 water_material = ExtResource("6_5ior6")
 
-[node name="EnvironmentManager" parent="." node_paths=PackedStringArray("player_refrence") instance=ExtResource("2_kqv83")]
-player_refrence = NodePath("../Player")
-wind_direction = Vector3(1, 0, 1)
-wind_speed = 5.0
+[node name="EnvironmentManager" parent="." instance=ExtResource("2_kqv83")]
+wind_direction = Vector3(1.6, 0, 0)
+wind_speed = 16.0
+
+[node name="PreviewCam" parent="." instance=ExtResource("6_ow7vk")]
+spring_length = 54.385
+speed = 20.1
+
+[editable path="CanvasLayer"]

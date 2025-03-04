@@ -8,7 +8,7 @@ render_mode blend_mix,
 			shadows_disabled;
 uniform vec3 primary_colour: source_color = vec3(0.13, 0.174, 0.025);
 uniform vec3 secondary_colour: source_color;
-uniform float weight:hint_range(0.0, 1.0);
+uniform sampler2D NOISE: repeat_enable,filter_nearest;
 uniform float water_level_margin = 0.0;
 global uniform float water_level;
 
@@ -19,9 +19,10 @@ void vertex(){
 }
 
 void fragment() {
+	float noise = texture(NOISE,UV).g;
 	float world_y = (INV_VIEW_MATRIX * vec4(VERTEX,1.0)).y;
 	float edge = smoothstep(water_level+water_level_margin,water_level,world_y);
-	vec3 colour = mix(primary_colour,secondary_colour,edge);
+	vec3 colour = mix(primary_colour,secondary_colour,edge*noise);
 	//colour = vec3(0.0,DEPTH,0.0);
 	ALBEDO.rgb = colour;
 }

@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://cndxlexamh16n"]
+
+[ext_resource type="Script" path="res://modules/preview_cam/preview_cam.gd" id="1_133o6"]
+
+[node name="PreviewCam" type="SpringArm3D"]
+transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 0, 0)
+spring_length = 200.0
+script = ExtResource("1_133o6")
+
+[node name="Camera3D" type="Camera3D" parent="."]
