@@ -5,6 +5,8 @@ Field of Reeds is a 3D game developed with the [Godot](https://github.com/godote
 ### Procedural Terrain Generation
 Field of Reeds features a robust 3D procedural generation system that can create semi-random landscapes of any preset size using Godot's [FastNoiseLite](https://docs.godotengine.org/en/stable/classes/class_fastnoiselite.html) feature.
 
+![](https://github.com/wokidoo/FieldOfReeds/blob/main/video/procedural_terrain.gif)
+
 ## Installation
 
 Under Construction
