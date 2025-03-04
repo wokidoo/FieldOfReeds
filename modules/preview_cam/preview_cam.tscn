@@ -8,3 +8,4 @@ spring_length = 200.0
 script = ExtResource("1_133o6")
 
 [node name="Camera3D" type="Camera3D" parent="."]
+current = true

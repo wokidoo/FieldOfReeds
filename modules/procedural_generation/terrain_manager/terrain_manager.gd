@@ -45,6 +45,11 @@ class_name TerrainManager
 	set(new_val):
 		clutter_height_cutoff = new_val
 		call_deferred("generate_clutter")
+## The variance for the clutter cutoff
+@export var clutter_height_noise: float = 0.0:
+	set(new_val):
+		clutter_height_noise = new_val
+		call_deferred("generate_clutter")
 
 @export_category("Water")
 ## Height of the water surface in the scene.
@@ -125,7 +130,7 @@ func generate_clutter() -> void:
 			var y = terrain_map.get_noise_2d(chunk.position.x + x, chunk.position.z + z) * height
 
 			# Check if the position is above the water level
-			if y >= clutter_height_cutoff:
+			if y >= clutter_height_cutoff + randf_range(-clutter_height_noise,clutter_height_noise):
 				var transform = Transform3D()
 				transform.origin = Vector3(x, y, z)
 				transform = transform.rotated_local(Vector3.UP, randf_range(-PI, PI))

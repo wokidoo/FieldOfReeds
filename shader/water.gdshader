@@ -7,7 +7,7 @@ render_mode blend_mix,
 			
 uniform vec3 primary_color:source_color;
 uniform vec3 secondary_color:source_color;
-uniform float proximity_scale:hint_range(0.0, 1.0) = 1.0;
+uniform float proximity_scale:hint_range(0.0, 3.0) = 1.0;
 uniform vec3 proximity_color:source_color;
 uniform sampler2D NOISE_TEXTURE_1:repeat_enable;
 uniform sampler2D NOISE_TEXTURE_2:repeat_enable;
@@ -29,9 +29,11 @@ void fragment() {
 	
 	vec3 color = mix(primary_color,secondary_color*proximity,noise_1*noise_2);
 	color += proximity_color * proximity;
-	
+	float edge = distance((INV_VIEW_MATRIX*vec4(VERTEX,1.0)).xyz,vec3(0.0));
+	edge = smoothstep(850.0,1000.0,edge*2.);
 	ALBEDO = color;
 	EMISSION = color;
 	ALPHA = (1.0-proximity);
+	ALPHA = 1.-edge;
 }
 
