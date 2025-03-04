@@ -33,6 +33,7 @@ class_name EnvironmentManager
 @onready var wind: Wind = $Wind
 
 func _ready():
+	wind.follow_target = player_refrence
 	wind.process_material.direction = wind_direction
 	if is_zero_approx(wind_speed) or wind_direction.is_zero_approx():
 		wind.amount_ratio = 0.0

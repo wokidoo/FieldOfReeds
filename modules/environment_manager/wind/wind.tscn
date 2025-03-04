@@ -17,7 +17,7 @@ colors = PackedColorArray(0, 0, 0, 0, 1, 1, 1, 0.32549, 1, 1, 1, 0)
 gradient = SubResource("Gradient_otbue")
 
 [sub_resource type="Curve" id="Curve_ja1it"]
-_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.253521, 1), 0.0, 0.0, 0, 0, Vector2(0.502347, 0), 0.0, 0.0, 0, 0, Vector2(0.746479, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.253521, 1), 0.0, 0.0, 0, 0, Vector2(0.496403, 0), 0.0, 0.0, 0, 0, Vector2(0.746479, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
 point_count = 5
 
 [sub_resource type="CurveXYZTexture" id="CurveXYZTexture_243h4"]
@@ -35,12 +35,12 @@ particle_flag_align_y = true
 emission_shape_scale = Vector3(50, 25, 50)
 emission_shape = 3
 emission_box_extents = Vector3(1, 1, 1)
-direction = Vector3(2, 0, 0)
+direction = Vector3(2.625, 0, 3.03)
 spread = 0.0
 initial_velocity_min = 28.11
 initial_velocity_max = 28.11
-directional_velocity_min = -30.0
-directional_velocity_max = 30.0
+directional_velocity_min = -15.0
+directional_velocity_max = 15.0
 directional_velocity_curve = SubResource("CurveXYZTexture_243h4")
 gravity = Vector3(0, 0, 0)
 scale_curve = SubResource("CurveTexture_o3jja")
@@ -73,7 +73,7 @@ curve = SubResource("Curve_uaf8i")
 [node name="Wind" type="GPUParticles3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0)
 extra_cull_margin = 16384.0
-amount = 500
+amount = 100
 lifetime = 5.0
 interpolate = false
 fract_delta = false

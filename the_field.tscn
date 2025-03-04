@@ -69,19 +69,17 @@ unique_name_in_owner = true
 transform = Transform3D(-4.37114e-08, -1, 4.37114e-08, 0, -4.37114e-08, -1, 1, -4.37114e-08, 1.91069e-15, 0, 0, 0)
 far = 200.0
 
-[node name="EnvironmentManager" parent="." node_paths=PackedStringArray("player_refrence") instance=ExtResource("2_kqv83")]
-player_refrence = NodePath("../Player")
-wind_direction = Vector3(2.195, 0, 0)
-wind_speed = 5.0
-
 [node name="TerrainManager" type="Node3D" parent="."]
 script = ExtResource("4_u65xw")
-regenerate_clutter = null
 terrain_map = SubResource("FastNoiseLite_ux0w1")
 height = 5
 chunk_count = 25
 chunk_material = ExtResource("6_ew471")
 clutter_count = 4000
-clutter_height_cutoff = 1.61
-water_level = -0.89
+clutter_height_cutoff = 2.135
 water_material = ExtResource("6_5ior6")
+
+[node name="EnvironmentManager" parent="." node_paths=PackedStringArray("player_refrence") instance=ExtResource("2_kqv83")]
+player_refrence = NodePath("../Player")
+wind_direction = Vector3(1, 0, 1)
+wind_speed = 5.0
