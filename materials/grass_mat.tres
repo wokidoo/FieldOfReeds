@@ -1,0 +1,28 @@
+[gd_resource type="ShaderMaterial" load_steps=6 format=3 uid="uid://chmgg5ntd7dla"]
+
+[ext_resource type="Shader" uid="uid://decfndgjodnp4" path="res://shaders/grass_shader.gdshader" id="1_nvtr4"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_c67kr"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_ancc4"]
+noise = SubResource("FastNoiseLite_c67kr")
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_rvtwe"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_26b8c"]
+noise = SubResource("FastNoiseLite_rvtwe")
+
+[resource]
+resource_name = "grass_material"
+render_priority = 0
+shader = ExtResource("1_nvtr4")
+shader_parameter/BaseColor = Color(0.507, 0.319, 0.093, 1)
+shader_parameter/SecondaryColor = Color(0.13, 0.174, 0.025, 1)
+shader_parameter/color_coefficient = 0.0
+shader_parameter/wind_noise = SubResource("NoiseTexture2D_26b8c")
+shader_parameter/sway_intensity = 0.3
+shader_parameter/sway_speed = 1.0
+shader_parameter/sway_direction = Vector3(1, 0, 1)
+shader_parameter/sway_noise = SubResource("NoiseTexture2D_ancc4")
+shader_parameter/water_level_margin = 1.0
+shader_parameter/roughness = 1.0

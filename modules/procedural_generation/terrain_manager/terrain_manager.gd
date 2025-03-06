@@ -6,19 +6,9 @@
 extends Node3D
 class_name TerrainManager
 
-## If `true`, regenerates the terrain. Automatically resets to `false` after regeneration.
-## @deprecated: Will be replaced with @export_tool_button.
-@export var regenerate_terrain := false :
-	set(new_reload):
-		regenerate_terrain = false
-		generate_terrain()
+@export_tool_button("Regenerate Terrain", "CollisionShape3D") var regenerate_terrain:Callable = generate_terrain
 
-## If `true`, regenerates the clutter. Automatically resets to `false` after regeneration.
-## @deprecated: Will be replaced with @export_tool_button.
-@export var regenerate_clutter := false :
-	set(new_reload):
-		regenerate_terrain = false
-		generate_clutter()
+@export_tool_button("Regenerate Clutter", "MultiMeshInstance3D") var regenerate_clutter:Callable = generate_clutter
 
 ## The noise map used for terrain height generation.
 @export var terrain_map: FastNoiseLite

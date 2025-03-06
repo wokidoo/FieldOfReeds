@@ -1,6 +1,6 @@
 [gd_resource type="ShaderMaterial" load_steps=4 format=3 uid="uid://dd353rtouf7ni"]
 
-[ext_resource type="Shader" path="res://shader/rock.gdshader" id="1_s3qml"]
+[ext_resource type="Shader" uid="uid://b7fml8orecsnn" path="res://shaders/rock.gdshader" id="1_s3qml"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_1tujh"]
 noise_type = 2
@@ -25,5 +25,5 @@ render_priority = 0
 shader = ExtResource("1_s3qml")
 shader_parameter/primary_colour = Color(0.13, 0.174, 0.025, 1)
 shader_parameter/secondary_colour = Color(0.584153, 0.445639, 0.341731, 1)
-shader_parameter/water_level_margin = 1.0
 shader_parameter/NOISE = SubResource("NoiseTexture2D_31du8")
+shader_parameter/water_level_margin = 1.0
