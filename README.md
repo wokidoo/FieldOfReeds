@@ -1,7 +1,7 @@
 # 🌾 Field of Reeds
 
 ![Godot Engine](https://img.shields.io/badge/Made%20With-Godot%204-478cbf?style=for-the-badge&logo=godotengine&logoColor=white)
-![Godot v4.3](https://img.shields.io/badge/Godot-v4.3-478cbf?style=for-the-badge&logo=godotengine&logoColor=white)
+![Godot v4.4](https://img.shields.io/badge/Godot-v4.4-478cbf?style=for-the-badge&logo=godotengine&logoColor=white)
 ![GitHub Release](https://img.shields.io/github/v/release/wokidoo/FieldOfReeds?style=for-the-badge)
 ![License](https://img.shields.io/github/license/wokidoo/FieldOfReeds?style=for-the-badge)
 ![Status](https://img.shields.io/badge/Status-Under%20Construction-orange?style=for-the-badge)
