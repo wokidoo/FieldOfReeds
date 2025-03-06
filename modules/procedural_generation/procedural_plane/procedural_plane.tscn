@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://bjmcdggeahrkj"]
 
-[ext_resource type="Script" path="res://modules/procedural_generation/procedural_plane/procedural_plane.gd" id="1_ff1yh"]
+[ext_resource type="Script" uid="uid://crtspqxslahip" path="res://modules/procedural_generation/procedural_plane/procedural_plane.gd" id="1_ff1yh"]
 
 [node name="ProceduralPlane" type="Node3D"]
 script = ExtResource("1_ff1yh")

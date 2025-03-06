@@ -1,8 +1,8 @@
 shader_type spatial;
-render_mode blend_mix, 
-			depth_draw_opaque, 
-			cull_disabled, 
-			diffuse_toon, 
+render_mode blend_mix,
+			depth_draw_opaque,
+			cull_disabled,
+			diffuse_toon,
 			specular_toon,
 			world_vertex_coords,
 			shadows_disabled;
@@ -13,7 +13,7 @@ uniform float water_level_margin = 0.0;
 global uniform float water_level;
 
 varying vec3 local_normal;
- 
+
 void vertex(){
 	local_normal = NORMAL;
 }
@@ -26,4 +26,3 @@ void fragment() {
 	//colour = vec3(0.0,DEPTH,0.0);
 	ALBEDO.rgb = colour;
 }
-
