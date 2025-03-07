@@ -3,7 +3,7 @@ extends Object
 ## @experimental
 ## A utility class for generating procedural 3D terrain meshes based on noise textures.
 ##
-## This class provides tools to procedurally generate 3D meshes ([MeshInstance3D]) using a [FastNoiseLite] texture.
+## This class provides tools to procedurally generate and modify 3D meshes ([MeshInstance3D]) using a [FastNoiseLite] texture.
 ## The generated mesh includes collision data and can be customized with parameters such 
 ## as size, height, subdivisions, and material.
 ## [br][br]
@@ -83,3 +83,69 @@ static func generate_mesh(
 	mesh.create_trimesh_collision()
 	mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	return mesh
+
+## @experimental: This method is subject to major change
+## Finds the index of the nearest vertex to a given position in a MeshInstance3D.
+##
+## This function searches for the closest vertex in the given `MeshInstance3D` using a
+## [b]greedy nearest-neighbor[/b] algorithm. The search starts from the first vertex
+## and iteratively moves to the closest connected vertex until no closer vertex
+## is found. Optionally, it can convert a global position to local space before
+## performing the search.
+## [br][br]
+## [b][color=gold]Note:[/color][/b] The current implementation of the greedy search 
+## algorithm will eventually replaced with one of the following in order to both improve
+## runtime efficiency and avoid bugs...
+## [br][b]- k-d Tree (binary space partitioning tree)[/b]
+## [br][b]- BVH (Bounding Volume Hierarchy)[/b]
+## [br][b]- Grid Partitioning + Local k-d Tree[/b]
+## 
+## [br][br]
+## [param target_mesh]: The `MeshInstance3D` whose vertex data is searched.
+## [br]
+## [param target_position]: The position in either global or local space to compare against.
+## [br]
+## [param global_space]: If `true`, `target_position` is assumed to be in global space 
+##                     and will be converted to local space before searching. Defaults to `true`.
+static func get_nearest_index(target_mesh:MeshInstance3D,target_position: Vector3, global_space: bool = true) -> int:
+	# If the target postion is in global space, convert to local space
+	if global_space:
+		target_position = target_mesh.to_local(target_position)
+	
+	var mdt: MeshDataTool = MeshDataTool.new()
+	# Load mesh data
+	mdt.create_from_surface(target_mesh.mesh, 0)  
+	
+	# Start search from the first vertex in the array
+	var current_index = 0  
+	var current_distance = mdt.get_vertex(current_index).distance_to(target_position)
+
+	while true:
+		var nearest_index = current_index
+		var shortest_distance = current_distance
+		# Track if we find a closer vertex
+		var found_closer = false
+
+		# Iterate over connected edges
+		for edge_index in mdt.get_vertex_edges(current_index):
+			var vert_index_0 = mdt.get_edge_vertex(edge_index, 0)
+			var vert_index_1 = mdt.get_edge_vertex(edge_index, 1)
+
+			# Find the vertex that is NOT the current one (i.e., the connected vertex)
+			var next_index = vert_index_0 if vert_index_1 == current_index else vert_index_1
+			var next_distance = mdt.get_vertex(next_index).distance_to(target_position)
+
+			# If this vertex is closer, update the next step
+			if next_distance < shortest_distance:
+				nearest_index = next_index
+				shortest_distance = next_distance
+				found_closer = true
+
+		# If no closer vertex is found, stop searching
+		if not found_closer:
+			break
+
+		# Move to the newly found closest vertex
+		current_index = nearest_index
+		current_distance = shortest_distance
+	return current_index
