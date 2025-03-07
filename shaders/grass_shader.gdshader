@@ -65,10 +65,10 @@ void vertex(){
 	wind *= mix(0.5,1.0,(sin(TIME * wind_speed * wind_tex.g)+1.0)/2.0);
 	//wind *= mix(-1.0,1.0,wind_tex.g);
 	wind.y = 0.0;
-	
+
 	VERTEX += sway;
 	VERTEX += wind;
-	
+
 	WORLD_POSITION = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
 }
 

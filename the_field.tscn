@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://frvextu0jlu3" path="res://post_processing/retro_post_processing.tscn" id="1_wucon"]
 [ext_resource type="PackedScene" uid="uid://h1e0r1lm5tkl" path="res://modules/environment_manager/EnvironmentManager.tscn" id="2_kqv83"]
-[ext_resource type="Script" uid="uid://l20f1f4xuwe0" path="res://modules/procedural_generation/terrain_manager/terrain_manager.gd" id="4_u65xw"]
+[ext_resource type="Script" uid="uid://l20f1f4xuwe0" path="res://modules/terrain_manager/terrain_manager.gd" id="4_u65xw"]
 [ext_resource type="Material" uid="uid://d6igh3j2g12g" path="res://materials/water_mat.tres" id="6_5ior6"]
 [ext_resource type="Material" uid="uid://dd353rtouf7ni" path="res://materials/terrain_mat.tres" id="6_ew471"]
 [ext_resource type="PackedScene" uid="uid://cndxlexamh16n" path="res://modules/preview_cam/preview_cam.tscn" id="6_ow7vk"]
@@ -29,7 +29,7 @@ clutter_height_noise = 1.19
 water_material = ExtResource("6_5ior6")
 
 [node name="EnvironmentManager" parent="." instance=ExtResource("2_kqv83")]
-wind_direction = Vector3(1, 0, 0)
+wind_direction = Vector3(1.61, 0, 0)
 wind_speed = 5.0
 
 [node name="PreviewCam" parent="." instance=ExtResource("6_ow7vk")]
