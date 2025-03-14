@@ -11,9 +11,10 @@ class_name TerrainManager
 @export_tool_button("Regenerate Clutter", "MultiMeshInstance3D") var regenerate_clutter:Callable = generate_clutter
 
 ## The noise map used for terrain height generation.
-@export var terrain_map: FastNoiseLite
-## height multiplier used to scale height values obtained in the [member terrain_map].
-@export var height: int = 1
+@export var terrain_maps: Array[TerrainMap]
+
+@export var tapper_start: float = 100.0
+@export var tapper_offset: float = 25.0
 
 @export_category("Chunks")
 ## The total number of terrain chunks to generate.
@@ -62,7 +63,6 @@ func _ready() -> void:
 	RenderingServer.global_shader_parameter_set("water_level",water_level)
 	generate_terrain()
 
-
 ## Generates terrain chunks based on the configured parameters (`chunk_count`, `chunk_size`, etc.).
 ## Clears any existing chunks before generating new ones.
 func generate_terrain() -> void:
@@ -83,7 +83,7 @@ func generate_terrain() -> void:
 		var x = (col - half_grid_size)*chunk_size.x
 		var z = (row - half_grid_size)*chunk_size.y
 
-		var chunk:MeshInstance3D = ProceduralPlane.generate_mesh(terrain_map,Vector2(x,z),chunk_size,height,subdivisions,chunk_material)
+		var chunk:MeshInstance3D = generate_mesh(terrain_maps,Vector2(x,z),chunk_size,subdivisions,chunk_material)
 		chunk.position = Vector3(x,0.0,z)
 		self.add_child(chunk)
 		# Store the chunk in the array
@@ -92,6 +92,74 @@ func generate_terrain() -> void:
 		print_debug("Chunk %s plane generated" % i)
 	generate_clutter()
 	generate_water()
+
+## Generates a 3D plane using a noise texture.
+## [br]
+## [br]- [param noise_texture]: The [FastNoiseLite] instance used to generate heightmap data.
+## [br]- [param texture_offset]: A 2D vector specifying the offset of the noise texture for seamless stitching.
+## [br]- [param size]: A 2D vector defining the width and depth of the plane mesh.
+## [br]- [param height]: The displacement for the vertices based on the noise texture.
+## [br]- [param subdivisions]: The number of subdivisions per unit of the plane mesh (controls vertex density).
+## [br]- [param material]: The material to apply to the generated mesh.
+func generate_mesh(
+	terrain_maps:Array[TerrainMap], 
+	texture_offset: Vector2, 
+	size:Vector2,  
+	subdivisions:int, 
+	material:Material) -> MeshInstance3D:
+	# Create duplicate of texure to avoid modifiying the original
+	var terrain_maps_temp: Array[TerrainMap] = terrain_maps.duplicate()
+	# Set temp terrain_map noise offset so the mesh can be stitched with other planes
+	for terrain_map in terrain_maps_temp:
+		terrain_map.noise_map.offset= Vector3(texture_offset.x,texture_offset.y,0.0)
+	print_debug("Generating mesh data")
+	# create flat plane mesh as a base
+	var plane_mesh = PlaneMesh.new()
+	plane_mesh.size = size
+	plane_mesh.subdivide_width = size.x * subdivisions
+	plane_mesh.subdivide_depth = size.y * subdivisions
+	plane_mesh.material = material
+	
+	print_debug("Creating mesh")
+	var st = SurfaceTool.new()
+	# creating vertex array from plane mesh
+	st.create_from(plane_mesh,0)
+	# Creating ArrayMesh from original plane mesh to manipulate vertices
+	var array_plane:ArrayMesh = st.commit()
+	
+	var mesh_data_tool = MeshDataTool.new()
+	# Using MeshDataTool to manipulate vertex data
+	mesh_data_tool.create_from_surface(array_plane,0)
+	
+	# Set each vertex.y value to mesh_texture value 
+	for i in range(mesh_data_tool.get_vertex_count()):
+		var mesh_vertex:Vector3 = mesh_data_tool.get_vertex(i)
+		mesh_vertex.y = get_total_map_height(Vector2(mesh_vertex.x,mesh_vertex.z),texture_offset)
+		# tapper down height as you get further from center
+		var tapper : float = get_center_lerp(mesh_vertex,texture_offset)
+		var center_distance: float = get_center_distance(mesh_vertex,texture_offset)
+		#mesh_vertex.y *= tapper
+		if is_zero_approx(tapper):
+			var reduce_by: float = center_distance - (tapper_offset+ tapper_start) 
+			mesh_vertex.y -= reduce_by
+		mesh_data_tool.set_vertex(i, mesh_vertex)
+	
+	# Clear old array_plane mesh data and set the new modified ArrayMesh
+	array_plane.clear_surfaces()
+	# Update ArrayMesh with updated vertex data
+	mesh_data_tool.commit_to_surface(array_plane)
+	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	st.create_from(array_plane,0)
+	st.generate_normals()
+	
+	
+	var mesh = MeshInstance3D.new()
+	# Create mesh with SurfaceTool
+	mesh.mesh =  st.commit()
+	# Create collision for mesh
+	mesh.create_trimesh_collision()
+	mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	return mesh
 
 ## Generates clutter (e.g., grass patches) for each terrain chunk based on configured parameters.
 ## Removes old clutter before generating new instances.
@@ -117,8 +185,8 @@ func generate_clutter() -> void:
 			# Generate random position within the chunk
 			var x := randf_range(-chunk_size.x / 2.0, chunk_size.x / 2.0)
 			var z := randf_range(-chunk_size.y / 2.0, chunk_size.y / 2.0)
-			var y = terrain_map.get_noise_2d(chunk.position.x + x, chunk.position.z + z) * height
-
+			var y := get_total_map_height(Vector2(x,z),Vector2(chunk.global_position.x,chunk.global_position.z))
+			y *= get_center_lerp(Vector3(x,y,z),Vector2(chunk.global_position.x,chunk.global_position.z))
 			# Check if the position is above the water level
 			if y >= clutter_height_cutoff + randf_range(-clutter_height_noise,clutter_height_noise):
 				var transform = Transform3D()
@@ -168,3 +236,24 @@ func generate_water() -> void:
 	water.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	water.position.y = water_level
 	add_child(water)
+
+func get_total_map_height(position: Vector2, offset: Vector2) -> float:
+	var height: float = 0.0
+	for terrain_map in terrain_maps:
+		var noise:FastNoiseLite = terrain_map.noise_map
+		noise.offset.x = offset.x
+		noise.offset.y = offset.y
+		height += noise.get_noise_2d(position.x,position.y) * terrain_map.height
+	return height
+
+func get_center_lerp(position: Vector3, offset: Vector2) -> float:
+	var center_distance = get_center_distance(position,offset)
+	var lerp = inverse_lerp(tapper_offset+tapper_start, tapper_start, center_distance)
+	return clamp(lerp,0.0,1.0)
+
+func get_center_distance(position: Vector3, offset: Vector2) -> float:
+	var world_mesh_vertex: Vector2
+	world_mesh_vertex.x = position.x + offset.x
+	world_mesh_vertex.y = position.z + offset.y
+	return world_mesh_vertex.distance_to(Vector2.ZERO)
+	
